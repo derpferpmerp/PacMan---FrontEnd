@@ -14,8 +14,6 @@ class Bird(object):  # represents the bird, not the game
 		self.y = 0
 		self.speed = 3
 		self.ckey = None
-		self.tmp_ckey = None
-		self.rect = self.image.get_rect(topleft = (self.x, self.y))
 
 	def handle_keys(self,k=None):
 		""" Handles Keys """

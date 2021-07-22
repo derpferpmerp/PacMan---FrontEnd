@@ -18,7 +18,8 @@ class Bird(pygame.sprite.Sprite):
 		self.index = 0
 		self.image = pygame.image.load("images/player_0.png")
 		self.rect = pygame.Rect(5, 5, 150, 198)
-		self.slowdown = 10
+		self.slowdown = 6 # How many times it needs to go through the while loop to switch 
+		# Images for Pacman Sprite (ie switch to next frame)
 		self.actualslow = 0
 
 

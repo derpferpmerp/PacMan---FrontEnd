@@ -1,11 +1,10 @@
 import pygame
-import sys
-import math
+
 
 # it is better to have an extra variable, than an extremely long line.
-img_path = './player.png'
+img_path = "./player.png"
 
-class Bird(object):  # represents the bird, not the game
+class Bird:  # represents the bird, not the game
 	def __init__(self):
 		""" The constructor of the class """
 		self.image = pygame.image.load(img_path)

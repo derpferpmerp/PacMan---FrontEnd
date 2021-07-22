@@ -1,18 +1,26 @@
 import pygame
-
+import glob
 
 # it is better to have an extra variable, than an extremely long line.
 img_path = "./player.png"
 
-class Bird:  # represents the bird, not the game
+class Bird(pygame.sprite.Sprite):
 	def __init__(self):
 		""" The constructor of the class """
-		self.image = pygame.image.load(img_path)
+		#self.image = pygame.image.load(img_path)
 		# the bird's position
 		self.x = 0
 		self.y = 0
 		self.speed = 3
 		self.ckey = None
+		super(Bird, self).__init__()
+		self.images = [pygame.image.load(f"images/player_{num}.png") for num in range(0,4)]
+		self.index = 0
+		self.image = pygame.image.load("images/player_0.png")
+		self.rect = pygame.Rect(5, 5, 150, 198)
+		self.slowdown = 10
+		self.actualslow = 0
+
 
 	def handle_keys(self,k=None):
 		""" Handles Keys """
@@ -36,7 +44,21 @@ class Bird:  # represents the bird, not the game
 
 	def draw(self, surface):
 		""" Draw on surface """
+		if self.actualslow == self.slowdown:
+			self.actualslow = 0
+			self.index += 1
+			cont = True
+		else:
+			self.actualslow += 1
+			cont = False
+		if not cont:
+			surface.blit(self.image, (self.x, self.y))
+			return 0
 		# blit yourself at your current position
+		if self.index >= len(self.images):
+			self.index = 0
+		self.image = self.images[self.index]
+		self.index += 1
 		surface.blit(self.image, (self.x, self.y))
 
 pygame.init()
@@ -44,7 +66,7 @@ screen = pygame.display.set_mode((640, 400))
 
 bird = Bird() # create an instance
 clock = pygame.time.Clock()
-
+playergroup = pygame.sprite.Group(bird)
 running = True
 bckey=None
 
@@ -66,7 +88,7 @@ while running:
 		if bckey[x] == True:
 			bird.handle_keys(k=x)
 			break
-	screen.fill((255,255,255)) # fill the screen with white
+	screen.fill((0,0,0)) # fill the screen with white
 	bird.draw(screen) # draw the bird to the screen
 	pygame.display.update() # update the screen
 

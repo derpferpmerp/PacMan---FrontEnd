@@ -1,5 +1,5 @@
 import pygame
-import glob
+
 
 # it is better to have an extra variable, than an extremely long line.
 img_path = "./player.png"
@@ -13,12 +13,13 @@ class Bird(pygame.sprite.Sprite):
 		self.y = 0
 		self.speed = 3
 		self.ckey = None
-		super(Bird, self).__init__()
-		self.images = [pygame.image.load(f"images/player_{num}.png") for num in range(0,4)]
+		super().__init__()
+		self.imgdct = {}
+		self.images = self.imgdct["RIGHT"],self.imgdct["DOWN"],self.imgdct["UP"],self.imgdct["LEFT"] = [[pygame.image.load(f"images/{itm}/player_{num}.png") for num in range(0,4)] for itm in ["RIGHT","DOWN","UP","LEFT"]]
 		self.index = 0
-		self.image = pygame.image.load("images/player_0.png")
+		self.image = pygame.image.load("images/RIGHT/player_0.png")
 		self.rect = pygame.Rect(5, 5, 150, 198)
-		self.slowdown = 6 # How many times it needs to go through the while loop to switch 
+		self.slowdown = 6 # How many times it needs to go through the while loop to switch
 		# Images for Pacman Sprite (ie switch to next frame)
 		self.actualslow = 0
 
@@ -43,7 +44,7 @@ class Bird(pygame.sprite.Sprite):
 		elif key[pygame.K_LEFT] or k=="LEFT": # left key
 			self.x -= dist * self.speed # move left
 
-	def draw(self, surface):
+	def draw(self, surface, direction="RIGHT"):
 		""" Draw on surface """
 		if self.actualslow == self.slowdown:
 			self.actualslow = 0
@@ -55,10 +56,9 @@ class Bird(pygame.sprite.Sprite):
 		if not cont:
 			surface.blit(self.image, (self.x, self.y))
 			return 0
-		# blit yourself at your current position
-		if self.index >= len(self.images):
+		if self.index >= len(self.imgdct[direction]):
 			self.index = 0
-		self.image = self.images[self.index]
+		self.image = self.imgdct[direction][self.index]
 		self.index += 1
 		surface.blit(self.image, (self.x, self.y))
 
@@ -85,12 +85,14 @@ while running:
 		"LEFT":[False if bird.ckey[pygame.K_LEFT] == 0 else True][0],
 		"RIGHT":[False if bird.ckey[pygame.K_RIGHT] == 0 else True][0],
 	}
+	kk = "RIGHT"
 	for x in list(bckey.keys()):
 		if bckey[x] == True:
 			bird.handle_keys(k=x)
+			kk=x
 			break
 	screen.fill((0,0,0)) # fill the screen with white
-	bird.draw(screen) # draw the bird to the screen
+	bird.draw(screen,direction=kk) # draw the bird to the screen
 	pygame.display.update() # update the screen
 
 	clock.tick(40)
